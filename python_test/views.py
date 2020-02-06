@@ -1,7 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.shortcuts import render
-from django.db.models.functions import Lower
 
 from django.views import generic
 from .models import Client
@@ -36,10 +35,11 @@ def listClient(request):
 
     # the ability to order by name, email address, phone number and suburb
     if order != '' and order is not None:
-        if sort == 'desc':
-            client_list = client_list.order_by(Lower(order)).reverse()
-        else:
-            client_list = client_list.order_by(Lower(order))
+        if order in ['contact', 'email', 'id', 'name', 'phone', 'postcode', 'state', 'street', 'suburb']:
+            if sort == 'desc':
+                client_list = client_list.order_by(order.lower()).reverse()
+            else:
+                client_list = client_list.order_by(order.lower())
 
     context = {
         'client_list': client_list,
